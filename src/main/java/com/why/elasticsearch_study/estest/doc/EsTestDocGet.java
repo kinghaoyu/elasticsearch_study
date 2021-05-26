@@ -1,4 +1,4 @@
-package com.why.elasticsearch_study.doc;
+package com.why.elasticsearch_study.estest.doc;
 
 import com.why.elasticsearch_study.enums.TestEnums;
 import org.apache.http.HttpHost;
