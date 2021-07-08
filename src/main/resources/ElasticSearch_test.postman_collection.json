@@ -80,7 +80,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:9200/_cat/indices?v",
+							"raw": "http://127.0.0.1:9200/_cat/indices?format=json",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -95,9 +95,31 @@
 							],
 							"query": [
 								{
-									"key": "v",
-									"value": null
+									"key": "format",
+									"value": "json"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取所有索引的mappings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:9200/_mapping",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9200",
+							"path": [
+								"_mapping"
 							]
 						}
 					},
@@ -866,6 +888,111 @@
 							"path": [
 								"_cat",
 								"nodes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "分词器",
+			"item": [
+				{
+					"name": "分词器",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"单元测试\",\n    \"analyzer\":\"standard\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:9200/_analyze",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9200",
+							"path": [
+								"_analyze"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "自定义分词器",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"settings\": {\n        \"analysis\": {\n            \"char_filter\": {\n                \"&_to_and\": {\n                    \"type\": \"mapping\",\n                    \"mappings\": [\n                        \"&=> and\"\n                    ]\n                }\n            },\n            \"filter\": {\n                \"my_stopwords\": {\n                    \"type\": \"stop\",\n                    \"stopwords\": [\n                        \"the\",\n                        \"a\"\n                    ]\n                }\n            },\n            \"analyzer\": {\n                \"my_analyzer\": {\n                    \"type\": \"custom\",\n                    \"char_filter\": [\n                        \"html_strip\",\n                        \"&_to_and\"\n                    ],\n                    \"tokenizer\": \"standard\",\n                    \"filter\": [\n                        \"lowercase\",\n                        \"my_stopwords\"\n                    ]\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:9200/my_index",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9200",
+							"path": [
+								"my_index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "测试自定义分词器",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"The quick & brown fox\",\n    \"analyzer\":\"my_analyzer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:9200/my_index/_analyze",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9200",
+							"path": [
+								"my_index",
+								"_analyze"
 							]
 						}
 					},
